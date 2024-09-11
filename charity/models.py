@@ -12,11 +12,17 @@ INST_TYPES = [
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 class Institution(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     type_of_institution = models.CharField(choices=INST_TYPES, default='1', max_length=1)
     category = models.ManyToManyField(Category)
+
+    def __str__(self):
+        return self.name
 
 
 class Donation(models.Model):
