@@ -120,13 +120,17 @@
                     </li>
                 {% endfor %}
             </ul>
-            <!-- Pagination
             <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
+                {% for page_num in foundation_paginator.page_range %}
+                    <li>
+                        <a href="#"
+                           class="btn btn--small btn--without-border {% if foundations.number == page_num %}active{% endif %}"
+                           data-page="{{ page_num }}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
-            -->
         </div>
 
         <!-- SLIDE 2 -->
@@ -155,15 +159,17 @@
                 {% endfor %}
             </ul>
 
-            <!-- Pagination
             <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="4">4</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="5">5</a></li>
+                {% for page_num in non_governmental_paginator.page_range %}
+                    <li>
+                        <a href="#"
+                           class="btn btn--small btn--without-border {% if non_governmental.number == page_num %}active{% endif %}"
+                           data-page="{{ page_num }}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
-            -->
         </div>
 
         <!-- SLIDE 3 -->
@@ -189,12 +195,17 @@
                 {% endfor %}
             </ul>
 
-            <!-- Pagination
             <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+                {% for page_num in locals_collections_paginator.page_range %}
+                    <li>
+                        <a href="#"
+                           class="btn btn--small btn--without-border {% if locals_collections.number == page_num %}active{% endif %}"
+                           data-page="{{ page_num }}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
-            -->
         </div>
     </section>
 {% endblock %}
