@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum
 from django.shortcuts import render, redirect
-from django.template.defaultfilters import first
 from django.views import View
 from .models import Donation, Institution
 
@@ -77,7 +76,11 @@ class RegisterView(View):
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
         if password == password2:
-            User.objects.create_user(username=email, first_name=name,last_name=surname,email=email, password=password)
-            return redirect('login')
+            if not User.objects.filter(email=email).exists():
+                user = User.objects.create_user(username=email, first_name=name,last_name=surname,email=email, password=password)
+                user.save()
+                return redirect('login')
+            else:
+                return render(request, 'charity/register.html', {'error': 'Użytkownik z takim email już istnieje'})
         else:
-            return render(request, 'charity/register.html', {'error': 'Passwords do not match'})
+            return render(request, 'charity/register.html', {'error': 'Hasła nie są takie same'})
