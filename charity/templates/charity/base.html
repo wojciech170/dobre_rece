@@ -10,13 +10,30 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 </head>
 <body>
-{% block content %}
+{% block header %}
+    <header>
+        <nav class="container container--70">
+            <ul class="nav--actions">
+                <li><a href="{% url 'login' %}">Zaloguj</a></li>
+                <li class="highlighted"><a href="{% url 'register' %}">Załóż konto</a></li>
+            </ul>
 
+            <ul>
+                <li><a href="{% url 'landing' %}">Start</a></li>
+                <li><a href="../#steps">O co chodzi?</a></li>
+                <li><a href="../#about-us">O nas</a></li>
+                <li><a href="../#help">Fundacje i organizacje</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+{% endblock %}
+{% block content %}
 
 {% endblock %}
 
 <footer>
-    <div class="contact">
+    <div id="contact" class="contact">
         <h2>Skontaktuj się z nami</h2>
         <h3>Formularz kontaktowy</h3>
         <form>
