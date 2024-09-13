@@ -1,8 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Donation, Institution
+from .models import Donation, Institution, Category
 from django.contrib import messages
 
 from django.contrib.auth import get_user_model, authenticate, login, logout
@@ -59,10 +60,14 @@ class LandingPageView(View):
         return render(request, 'charity/index.html', ctx)
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
+    login_url = 'login'
     def get(self, request):
-        return render(request, 'charity/form.html')
-
+        categories = Category.objects.all()
+        ctx = {
+            'categories': categories,
+        }
+        return render(request, 'charity/form.html', ctx)
 
 class LoginView(View):
     def get(self, request):
