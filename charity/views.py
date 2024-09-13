@@ -1,10 +1,13 @@
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum
 from django.shortcuts import render, redirect
-from django.template.defaultfilters import first
 from django.views import View
 from .models import Donation, Institution
+from django.contrib import messages
+
+from django.contrib.auth import get_user_model, authenticate, login, logout
+
+User = get_user_model()
 
 
 class LandingPageView(View):
@@ -65,6 +68,17 @@ class LoginView(View):
     def get(self, request):
         return render(request, 'charity/login.html')
 
+    def post(self, request):
+        username = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('landing')
+        else:
+            messages.error(request, 'Wygląda że nie ma takiego użytkownika')
+            return redirect('register')
+
 
 class RegisterView(View):
     def get(self, request):
@@ -77,7 +91,29 @@ class RegisterView(View):
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
         if password == password2:
-            User.objects.create_user(username=email, first_name=name,last_name=surname,email=email, password=password)
-            return redirect('login')
+            if not User.objects.filter(email=email).exists():
+                user = User.objects.create_user(
+                    username=email,
+                    first_name=name,
+                    last_name=surname,
+                    email=email,
+                    password=password,
+                )
+                user.save()
+                return redirect('login')
+            else:
+                return render(
+                    request,
+                    'charity/register.html',
+                    {
+                        'error': 'Użytkownik z takim email już istnieje'
+                    }
+                )
         else:
-            return render(request, 'charity/register.html', {'error': 'Passwords do not match'})
+            return render(request, 'charity/register.html', {'error': 'Hasła nie są takie same'})
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('landing')
