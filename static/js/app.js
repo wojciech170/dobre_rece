@@ -265,7 +265,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 this.$summary.querySelector('#date').innerText = this.$addressInfo.querySelector('input[name="data"]').value;
                 this.$summary.querySelector('#time').innerText = this.$addressInfo.querySelector('input[name="time"]').value;
                 this.$summary.querySelector('#comment').innerText = this.$addressInfo.querySelector('textarea[name="more_info"]').value;
-
             }
         }
 
@@ -295,9 +294,38 @@ document.addEventListener("DOMContentLoaded", function () {
          * TODO: validation, send data to server
          */
         submit(e) {
-            e.preventDefault();
-            this.currentStep++;
-            this.updateForm();
+            const bags = document.querySelector('input[name="bags"]').value;
+            const address = document.querySelector('input[name="address"]').value;
+            const city = document.querySelector('input[name="city"]').value;
+            const postcode = document.querySelector('input[name="postcode"]').value;
+            const phone = document.querySelector('input[name="phone"]').value;
+            const date = document.querySelector('input[name="data"]').value;
+            const time = document.querySelector('input[name="time"]').value;
+
+            if (!bags || !address || !city || !postcode || !phone || !date || !time) {
+                e.preventDefault();
+                alert('Wszystkie pola muszą być wypełnione!');
+                return;
+            }
+            if (isNaN(bags) || bags <= 0) {
+                e.preventDefault();
+                alert('Wartość torb musi być liczbą dodatnią!');
+                return;
+            }
+            const phoneRegex = /^[+]?[0-9]{9,15}$/;
+            if (!phoneRegex.test(phone)) {
+                e.preventDefault();
+                alert('Podaj poprawny numer telefonu!');
+                return;
+            }
+
+            if (this.currentStep < 5) {
+                e.preventDefault();
+                this.currentStep++;
+                this.updateForm();
+            } else {
+                console.log('Formularz przesłany');
+            }
         }
     }
 
