@@ -248,7 +248,25 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
-            // TODO: get data from inputs and show them in summary
+            // get data from inputs and show them in summary
+            if (this.currentStep === 5) {
+                this.$bags = document.querySelector('.bag_number').value;
+                this.$institution = document.querySelector('input[name=organization]:checked');
+                this.$addressInfo = document.querySelector('.address');
+                this.$summary = document.querySelector('.summary')
+
+                this.$summary.querySelector('#bags_number').innerText = this.$bags;
+                this.$summary.querySelector('#selected_organization').innerText =
+                    `${this.$institution.getAttribute('data-organization-type')} "${this.$institution.getAttribute('data-organization-name')}"`;
+                this.$summary.querySelector('#address').innerText = this.$addressInfo.querySelector('input[name="address"]').value;
+                this.$summary.querySelector('#city').innerText = this.$addressInfo.querySelector('input[name="city"]').value;
+                this.$summary.querySelector('#postcode').innerText = this.$addressInfo.querySelector('input[name="postcode"]').value;
+                this.$summary.querySelector('#phone_number').innerText = this.$addressInfo.querySelector('input[name="phone"]').value;
+                this.$summary.querySelector('#date').innerText = this.$addressInfo.querySelector('input[name="data"]').value;
+                this.$summary.querySelector('#time').innerText = this.$addressInfo.querySelector('input[name="time"]').value;
+                this.$summary.querySelector('#comment').innerText = this.$addressInfo.querySelector('textarea[name="more_info"]').value;
+
+            }
         }
 
         /**

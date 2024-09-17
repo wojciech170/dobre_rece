@@ -94,7 +94,7 @@
                     <div class="form-group form-group--inline">
                         <label>
                             Liczba 60l worków:
-                            <input type="number" name="bags" step="1" min="1"/>
+                            <input type="number" class="bag_number" name="bags" step="1" min="1"/>
                         </label>
                     </div>
 
@@ -113,7 +113,12 @@
                              data-category="{{ inst.category.all|join:',' }}"
                              style="display: none">
                             <label>
-                                <input type="radio" name="organization" value="{{ inst.id }}"/>
+                                <input type="radio"
+                                       name="organization"
+                                       value="{{ inst.id }}"
+                                       data-organization-type="{{ inst.get_type_of_institution_display }}"
+                                       data-organization-name="{{ inst.name }}"
+                                />
                                 <span class="checkbox radio"></span>
                                 <span class="description">
                   <div class="title">{{ inst.get_type_of_institution_display }} "{{ inst.name }}"</div>
@@ -131,11 +136,11 @@
                     </div>
                 </div>
 
-                <!-- STEP 5 -->
+                <!-- STEP 4 -->
                 <div data-step="4">
                     <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
-                    <div class="form-section form-section--columns">
+                    <div class="form-section form-section--columns address">
                         <div class="form-section--column">
                             <h4>Adres odbioru</h4>
                             <div class="form-group form-group--inline">
@@ -193,14 +198,14 @@
                             <ul>
                                 <li>
                                     <span class="icon icon-bag"></span>
-                                    <span class="summary--text"
+                                    <span class="summary--text" id="bags_number"
                                     >4 worki ubrań w dobrym stanie dla dzieci</span
                                     >
                                 </li>
 
                                 <li>
                                     <span class="icon icon-hand"></span>
-                                    <span class="summary--text"
+                                    <span class="summary--text" id="selected_organization"
                                     >Dla fundacji "Mam marzenie" w Warszawie</span
                                     >
                                 </li>
@@ -211,19 +216,19 @@
                             <div class="form-section--column">
                                 <h4>Adres odbioru:</h4>
                                 <ul>
-                                    <li>Prosta 51</li>
-                                    <li>Warszawa</li>
-                                    <li>99-098</li>
-                                    <li>123 456 789</li>
+                                    <li id="address">Prosta 51</li>
+                                    <li id="city">Warszawa</li>
+                                    <li id="postcode">99-098</li>
+                                    <li id="phone_number">123 456 789</li>
                                 </ul>
                             </div>
 
                             <div class="form-section--column">
                                 <h4>Termin odbioru:</h4>
                                 <ul>
-                                    <li>13/12/2018</li>
-                                    <li>15:40</li>
-                                    <li>Brak uwag</li>
+                                    <li id="date">13/12/2018</li>
+                                    <li id="time">15:40</li>
+                                    <li id="comment">Brak uwag</li>
                                 </ul>
                             </div>
                         </div>
