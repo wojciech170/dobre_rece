@@ -1,8 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Donation, Institution
+from .models import Donation, Institution, Category
 from django.contrib import messages
 
 from django.contrib.auth import get_user_model, authenticate, login, logout
@@ -59,9 +61,17 @@ class LandingPageView(View):
         return render(request, 'charity/index.html', ctx)
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
+    login_url = 'login'
+
     def get(self, request):
-        return render(request, 'charity/form.html')
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        ctx = {
+            'categories': categories,
+            'institutions': institutions,
+        }
+        return render(request, 'charity/form.html', ctx)
 
 
 class LoginView(View):
@@ -117,3 +127,45 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('landing')
+
+
+class ConfirmView(View):
+    def get(self, request):
+        return render(request, 'charity/form-confirmation.html')
+
+    def post(self, request):
+        try:
+            categories = Category.objects.filter(name=request.POST.get('categories'))
+            institutions = Institution.objects.get(id=request.POST.get('organization'))
+
+            if (
+                    not request.POST.get('bags') or
+                    not request.POST.get('address') or
+                    not request.POST.get('city') or
+                    not request.POST.get('phone') or
+                    not request.POST.get('postcode') or
+                    not request.POST.get('data') or
+                    not request.POST.get('time') or
+                    not request.POST.get('more_info')
+            ):
+                raise ValidationError("Wszystkie pola muszą być wypełnione.")
+
+            donation = Donation.objects.create(
+                quantity=request.POST.get('bags'),
+                institution=institutions,
+                address=request.POST.get('address'),
+                phone_number=request.POST.get('phone'),
+                city=request.POST.get('city'),
+                zip_code=request.POST.get('postcode'),
+                pick_up_date=request.POST.get('data'),
+                pick_up_time=request.POST.get('time'),
+                pick_up_comment=request.POST.get('more_info'),
+                user=request.user
+            )
+
+            donation.category.set(categories)
+            donation.save()
+
+            return redirect('confirmation')
+        except ValidationError as e:
+            return render(request, 'charity/form.html', {'error': e.message})
