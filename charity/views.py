@@ -173,4 +173,8 @@ class ConfirmView(LoginRequiredMixin, View):
 
 class UserView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'charity/user-profile.html')
+        donations = Donation.objects.filter(user=request.user)
+        ctx = {
+            'donations': donations,
+        }
+        return render(request, 'charity/user-profile.html', ctx)
