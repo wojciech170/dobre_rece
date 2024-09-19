@@ -129,7 +129,7 @@ class LogoutView(View):
         return redirect('landing')
 
 
-class ConfirmView(View):
+class ConfirmView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'charity/form-confirmation.html')
 
@@ -169,3 +169,8 @@ class ConfirmView(View):
             return redirect('confirmation')
         except ValidationError as e:
             return render(request, 'charity/form.html', {'error': e.message})
+
+
+class UserView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'charity/user-profile.html')

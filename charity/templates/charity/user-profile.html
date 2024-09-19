@@ -1,0 +1,15 @@
+{% extends 'charity/base.html' %}
+{% block content %}
+    <section class="steps--item">
+        <h2>Dane użytkownika</h2>
+        <div>
+            <p><strong>Imię:</strong> {{ user.first_name }}</p>
+        </div>
+        <div>
+            <p><strong>Nazwisko:</strong> {{ user.last_name }}</p>
+        </div>
+        <div>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+    </section>
+{% endblock %}
