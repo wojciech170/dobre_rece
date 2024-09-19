@@ -12,4 +12,23 @@
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
     </section>
+    <section class="steps--item">
+        <h2>Przekazane dary:</h2>
+        {% for donation in donations %}
+            <p>
+                <span>
+                    <strong>Ilość worków:</strong> {{ donation.quantity }}
+                </span><br>
+                <span>
+                    <strong>Odbiorca:</strong>{{ donation.institution.get_type_of_institution_display }} "{{ donation.institution.name }}"
+                </span><br>
+                <span>
+                    <strong>Kategorie darowizny:</strong> {{ donation.category.all|join:', ' }}
+                </span><br>
+                <span>
+                    <strong>Data odbioru:</strong> {{ donation.pick_up_date }} {{ donation.pick_up_time }}
+                </span>
+            </p>
+        {% endfor %}
+    </section>
 {% endblock %}
