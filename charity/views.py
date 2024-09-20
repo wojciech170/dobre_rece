@@ -4,10 +4,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.views import View
+
+from .forms import EditUserForm, ChangePasswordForm
 from .models import Donation, Institution, Category
 from django.contrib import messages
 
-from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth import get_user_model, authenticate, login, logout, update_session_auth_hash
 
 User = get_user_model()
 
@@ -189,3 +191,51 @@ class UserView(LoginRequiredMixin, View):
             donation.is_taken = False
             donation.save()
         return redirect('user')
+
+
+class EditUserView(LoginRequiredMixin, View):
+    def get(self, request):
+        edit_user_form = EditUserForm(instance=request.user)
+        new_password_form = ChangePasswordForm(user=request.user)
+        ctx = {
+            'edit_user_form': edit_user_form,
+            'new_password_form': new_password_form,
+        }
+        return render(request, 'charity/edit-user.html', ctx)
+
+    def post(self, request):
+        edit_user_form = EditUserForm(instance=request.user)
+        new_password_form = ChangePasswordForm(user=request.user)
+
+        if 'edit_user' in request.POST:
+            edit_user_form = EditUserForm(request.POST, instance=request.user)
+            if edit_user_form.is_valid():
+                edit_user_form.save()
+                messages.success(request, "Twój profil został zaktualizowany")
+                return redirect('user')
+            else:
+                ctx = {
+                    'edit_user_form': edit_user_form,
+                    'new_password_form': new_password_form,
+                }
+                return render(request, 'charity/edit-user.html', ctx)
+
+        elif 'change_password' in request.POST:
+            new_password_form = ChangePasswordForm(request.POST, user=request.user)
+            if new_password_form.is_valid():
+                new_password_form.save()
+                update_session_auth_hash(request, request.user)
+                messages.success(request, 'Hasło zostało zmienione')
+                return redirect('user')
+            else:
+                ctx = {
+                    'edit_user_form': edit_user_form,
+                    'new_password_form': new_password_form,
+                }
+                return render(request, 'charity/edit-user.html', ctx)
+
+        ctx = {
+            'edit_user_form': edit_user_form,
+            'new_password_form': new_password_form,
+        }
+        return render(request, 'charity/edit-user.html', ctx)

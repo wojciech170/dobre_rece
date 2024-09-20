@@ -1,5 +1,10 @@
 {% extends 'charity/base.html' %}
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <h2> {{ message }}</h2>
+        {% endfor %}
+    {% endif %}
     <section class="steps--item">
         <h2>Dane użytkownika</h2>
         <div>
