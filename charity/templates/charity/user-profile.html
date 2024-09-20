@@ -12,22 +12,26 @@
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
     </section>
-    <section class="steps--item">
+    <section class="steps--item" id="donation_list">
         <h2>Przekazane dary:</h2>
         {% for donation in donations %}
-            <p>
-                <span>
-                    <strong>Ilość worków:</strong> {{ donation.quantity }}
-                </span><br>
-                <span>
-                    <strong>Odbiorca:</strong>{{ donation.institution.get_type_of_institution_display }} "{{ donation.institution.name }}"
-                </span><br>
-                <span>
-                    <strong>Kategorie darowizny:</strong> {{ donation.category.all|join:', ' }}
-                </span><br>
-                <span>
-                    <strong>Data odbioru:</strong> {{ donation.pick_up_date }} {{ donation.pick_up_time }}
-                </span>
+            <p {% if donation.is_taken == True %} style="color: #737373"{% endif %}>
+                <strong>Ilość worków:</strong> {{ donation.quantity }}<br>
+                <strong>Odbiorca:</strong>{{ donation.institution.get_type_of_institution_display }}
+                "{{ donation.institution.name }}"<br>
+                <strong>Kategorie darowizny:</strong> {{ donation.category.all|join:', ' }}<br>
+                <strong>Data odbioru:</strong> {{ donation.pick_up_date }} {{ donation.pick_up_time }}<br>
+
+            <form method="post" action="{% url 'user' %}">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ donation.id }}">
+                <button type="submit">
+                    {% if donation.is_taken == False %}
+                        Odebrany
+                    {% else %}
+                        Nieodebrany
+                    {% endif %}</button>
+            </form>
             </p>
         {% endfor %}
     </section>

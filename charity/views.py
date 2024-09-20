@@ -173,8 +173,19 @@ class ConfirmView(LoginRequiredMixin, View):
 
 class UserView(LoginRequiredMixin, View):
     def get(self, request):
-        donations = Donation.objects.filter(user=request.user)
+        donations = Donation.objects.filter(user=request.user).order_by('is_taken')
+
         ctx = {
             'donations': donations,
         }
         return render(request, 'charity/user-profile.html', ctx)
+
+    def post(self, request):
+        donation = Donation.objects.get(id=request.POST['id'])
+        if not donation.is_taken:
+            donation.is_taken = True
+            donation.save()
+        else:
+            donation.is_taken = False
+            donation.save()
+        return redirect('user')
