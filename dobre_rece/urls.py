@@ -24,6 +24,7 @@ from charity.views import (
     LogoutView,
     ConfirmView,
     UserView,
+    EditUserView,
 )
 
 urlpatterns = [
@@ -35,4 +36,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('confirmation/', ConfirmView.as_view(), name='confirmation'),
     path('user/', UserView.as_view(), name='user'),
+    path('edit_user/', EditUserView.as_view(), name='edit_user'),
+
 ]
